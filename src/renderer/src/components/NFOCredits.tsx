@@ -32,70 +32,74 @@ export const NFOCredits: React.FC<NFOCreditsProps> = ({ onClose }) => {
 
   // Initialize and autoplay audio muted then unmute
   useEffect(() => {
-    let audio: HTMLAudioElement | null = null
-    let playPromise: Promise<void> | null = null
-
-    const initAudio = async () => {
+    const initAudio = () => {
       try {
-        audio = new Audio(keygennMusic)
+        const audio = new Audio(keygennMusic)
         audio.loop = true
         audio.volume = 0.7
-        audio.muted = true // Start muted to satisfy autoplay policy
+        audio.muted = false // Start unmuted to autoplay policy
         audioRef.current = audio
 
-        // Attempt to play
-        playPromise = audio.play()
-        await playPromise
+        audio.preload = 'auto'
 
-        // Unmute after successful autoplay
-        if (audio && !audio.paused) {
-          audio.muted = false
-        }
+        // Attempt to autoplay
+        audio
+          .play()
+          .then(() => {
+            console.log('音频自动播放成功')
+            setIsMuted(false)
+          })
+          .catch((err) => {
+            console.warn('音频自动播放失败，需要用户交互:', err)
+            // Auto-play failed, set to muted state to wait for user interaction
+            audio.muted = true
+            setIsMuted(true)
+          })
       } catch (err) {
-        console.warn('Audio autoplay failed:', err)
-        // Gracefully handle autoplay failure - user can manually unmute
+        console.warn('Audio initialization failed:', err)
       }
     }
 
     initAudio()
 
     return () => {
-      // Clean up audio properly
-      const cleanup = async () => {
-        if (playPromise) {
-          try {
-            await playPromise
-          } catch {
-            // Ignore play promise rejection during cleanup
-          }
-        }
-
-        if (audio) {
-          audio.pause()
-          audio.src = ''
-          audio.load() // Reset audio element
-        }
-
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.src = ''
+        audioRef.current.load()
         audioRef.current = null
       }
-
-      cleanup()
     }
   }, [])
 
-  // Handle mute toggle
   const toggleMute = () => {
-    if (audioRef.current) {
-      const newMutedState = !isMuted
-      audioRef.current.muted = newMutedState
-      setIsMuted(newMutedState)
+    if (!audioRef.current) {
+      console.warn('Audio not initialized')
+      return
+    }
 
-      // If unmuting and audio is paused, try to play
-      if (!newMutedState && audioRef.current.paused) {
-        audioRef.current.play().catch((err) => {
-          console.warn('Failed to resume audio playback:', err)
+    const audio = audioRef.current
+
+    if (isMuted) {
+      // Switch from muted to playing
+      audio.muted = false
+      audio
+        .play()
+        .then(() => {
+          setIsMuted(false)
+          console.log('Audio started playing')
         })
-      }
+        .catch((err) => {
+          console.warn('Audio playback failed:', err)
+          // Playback failed, stay in muted state
+          audio.muted = true
+          setIsMuted(true)
+        })
+    } else {
+      // Switch from playing to muted
+      audio.muted = true
+      setIsMuted(true)
+      console.log('Audio is now muted')
     }
   }
 

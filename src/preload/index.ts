@@ -185,7 +185,7 @@ const api = {
     ipcRenderer.invoke('load-agent-session-history', { sessionId }),
   listRunningClaudeSessions: () => ipcRenderer.invoke('list-running-claude-sessions'),
   listRunningSessions: () => ipcRenderer.invoke('list-running-sessions'),
-  updateSessionId: (runId: number, sessionId: string) => 
+  updateSessionId: (runId: number, sessionId: string) =>
     ipcRenderer.invoke('update-session-id', { runId, sessionId }),
   getClaudeSessionOutput: (sessionId: string) =>
     ipcRenderer.invoke('get-claude-session-output', { sessionId }),

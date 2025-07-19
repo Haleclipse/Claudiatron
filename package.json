@@ -33,7 +33,8 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "prepare": "husky"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
@@ -48,6 +49,8 @@
     "typeorm": "^0.3.25"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@electron-toolkit/eslint-config-ts": "^3.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
@@ -88,8 +91,10 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "framer-motion": "^12.23.0",
     "html2canvas": "^1.4.1",
+    "husky": "^9.1.7",
     "i18next": "^25.3.2",
     "i18next-browser-languagedetector": "^8.2.0",
+    "lint-staged": "^16.1.2",
     "lucide-react": "^0.525.0",
     "next-themes": "^0.4.6",
     "prettier": "^3.5.3",

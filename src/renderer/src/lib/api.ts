@@ -1073,7 +1073,11 @@ export const api = {
   /**
    * Executes a new interactive Claude Code session with streaming output
    */
-  async executeClaudeCode(projectPath: string, prompt: string, model: string): Promise<{ success: boolean; runId?: number; message: string }> {
+  async executeClaudeCode(
+    projectPath: string,
+    prompt: string,
+    model: string
+  ): Promise<{ success: boolean; runId?: number; message: string }> {
     const api = getWindowApi()
     return api.executeClaudeCode(projectPath, prompt, model)
   },

@@ -8,3 +8,4 @@ out
 # Documentation directory
 docs/
 .claude/
+.idea/

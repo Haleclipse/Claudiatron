@@ -187,12 +187,14 @@ ipcMain.handle('create-claude-session', async (_, projectPath) => { ... });
 ### 渲染进程中的平台检测
 
 **❌ 错误做法**: 在渲染进程中直接使用 `process.platform`
+
 ```typescript
 // 这会导致 "process is not defined" 错误
 if (process.platform === 'win32') { ... }
 ```
 
 **✅ 正确做法**: 使用 electron-toolkit 暴露的安全接口
+
 ```typescript
 // 使用预加载脚本暴露的平台信息
 if (window.electron.process.platform === 'win32') { ... }

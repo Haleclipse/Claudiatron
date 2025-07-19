@@ -4,6 +4,7 @@ import { Plus, Loader2, Bot, FolderCode } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { api, type Project, type Session, type ClaudeMdFile } from '@/lib/api'
 import { OutputCacheProvider } from '@/lib/outputCache'
+import { ThemeProvider } from '@/contexts/ThemeContext'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ProjectList } from '@/components/ProjectList'
@@ -434,48 +435,50 @@ function App() {
   }
 
   return (
-    <OutputCacheProvider>
-      <div className="h-screen bg-background flex flex-col">
-        {/* Custom Title Bar */}
-        <TitleBar />
+    <ThemeProvider>
+      <OutputCacheProvider>
+        <div className="h-screen bg-background flex flex-col">
+          {/* Custom Title Bar */}
+          <TitleBar />
 
-        {/* Topbar */}
-        <Topbar
-          onClaudeClick={() => handleViewChange('editor')}
-          onSettingsClick={() => handleViewChange('settings')}
-          onUsageClick={() => handleViewChange('usage-dashboard')}
-          onMCPClick={() => handleViewChange('mcp')}
-          onInfoClick={() => setShowNFO(true)}
-        />
+          {/* Topbar */}
+          <Topbar
+            onClaudeClick={() => handleViewChange('editor')}
+            onSettingsClick={() => handleViewChange('settings')}
+            onUsageClick={() => handleViewChange('usage-dashboard')}
+            onMCPClick={() => handleViewChange('mcp')}
+            onInfoClick={() => setShowNFO(true)}
+          />
 
-        {/* Main Content */}
-        <div className={`flex-1 ${view === 'settings' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
-          {renderContent()}
+          {/* Main Content */}
+          <div className={`flex-1 ${view === 'settings' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+            {renderContent()}
+          </div>
+
+          {/* NFO Credits Modal */}
+          {showNFO && <NFOCredits onClose={() => setShowNFO(false)} />}
+
+          {/* Claude Binary Dialog */}
+          <ClaudeBinaryDialog
+            open={showClaudeBinaryDialog}
+            onOpenChange={setShowClaudeBinaryDialog}
+            onSuccess={() => {
+              setToast({ message: t('toast.success.claudeBinaryPathSaved'), type: 'success' })
+              // Trigger a refresh of the Claude version check
+              window.location.reload()
+            }}
+            onError={(message) => setToast({ message, type: 'error' })}
+          />
+
+          {/* Toast Container */}
+          <ToastContainer>
+            {toast && (
+              <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />
+            )}
+          </ToastContainer>
         </div>
-
-        {/* NFO Credits Modal */}
-        {showNFO && <NFOCredits onClose={() => setShowNFO(false)} />}
-
-        {/* Claude Binary Dialog */}
-        <ClaudeBinaryDialog
-          open={showClaudeBinaryDialog}
-          onOpenChange={setShowClaudeBinaryDialog}
-          onSuccess={() => {
-            setToast({ message: t('toast.success.claudeBinaryPathSaved'), type: 'success' })
-            // Trigger a refresh of the Claude version check
-            window.location.reload()
-          }}
-          onError={(message) => setToast({ message, type: 'error' })}
-        />
-
-        {/* Toast Container */}
-        <ToastContainer>
-          {toast && (
-            <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />
-          )}
-        </ToastContainer>
-      </div>
-    </OutputCacheProvider>
+      </OutputCacheProvider>
+    </ThemeProvider>
   )
 }
 

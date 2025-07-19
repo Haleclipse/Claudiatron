@@ -299,7 +299,7 @@ export class ProcessManager extends EventEmitter {
           output.length
         )
         this.appendLiveOutput(runId, output)
-        
+
         this.sendAgentEvent(runId, 'agent-output', output)
       })
 
@@ -680,7 +680,7 @@ export class ProcessManager extends EventEmitter {
 
   private sendAgentEvent(runId: number, eventType: string, data: any): void {
     const handle = this.processes.get(runId)
-    
+
     // 调试信息
     console.log(`[ProcessManager] sendAgentEvent debug:`, {
       runId,
@@ -690,11 +690,11 @@ export class ProcessManager extends EventEmitter {
       sessionId: handle?.info.sessionId,
       isClaudeCode: handle?.info.agentId === 0 && handle?.info.agentName?.includes('Claude Code')
     })
-    
+
     // 针对 Claude Code 会话，使用会话特定的事件名称
     if (handle?.info.agentId === 0 && handle?.info.agentName?.includes('Claude Code')) {
       const claudeEventType = eventType.replace('agent-', 'claude-')
-      
+
       if (handle.info.sessionId) {
         // 有 sessionId，发送会话特定事件
         const sessionSpecificEvent = `${claudeEventType}:${handle.info.sessionId}`
@@ -725,7 +725,7 @@ export class ProcessManager extends EventEmitter {
         this.browserWindow.webContents.send(`${eventType}:${runId}`, data)
       }
     }
-    
+
     if (!this.browserWindow || this.browserWindow.isDestroyed()) {
       console.log(`[ProcessManager] Browser window not available for event`)
     }

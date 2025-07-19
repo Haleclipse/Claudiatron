@@ -47,7 +47,7 @@ export const claudeSyntaxTheme: any = {
     overflow: 'auto'
   },
   ':not(pre) > code[class*="language-"]': {
-    color: 'var(--color-foreground)', 
+    color: 'var(--color-foreground)',
     padding: '0.1em 0.3em',
     borderRadius: 'var(--radius-sm)',
     whiteSpace: 'normal'

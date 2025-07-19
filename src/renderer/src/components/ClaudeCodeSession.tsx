@@ -235,7 +235,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       // Better size estimation based on message type
       const message = displayableMessages[index]
       if (!message) return 150
-      
+
       // Different estimates for different message types
       if (message.type === 'system' && message.subtype === 'init') {
         return 100 // System init messages are usually shorter
@@ -248,7 +248,7 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       } else if (message.type === 'result') {
         return 150 // Result messages are medium sized
       }
-      
+
       return 150 // Default fallback
     },
     overscan: 5
@@ -435,16 +435,13 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       }
     })
 
-    const completeUnlisten = await listen<boolean>(
-      'claude-complete',
-      async (event) => {
-        console.log('[ClaudeCodeSession] Received claude-complete on reconnect:', event.payload)
-        if (isMountedRef.current) {
-          setIsLoading(false)
-          hasActiveSessionRef.current = false
-        }
+    const completeUnlisten = await listen<boolean>('claude-complete', async (event) => {
+      console.log('[ClaudeCodeSession] Received claude-complete on reconnect:', event.payload)
+      if (isMountedRef.current) {
+        setIsLoading(false)
+        hasActiveSessionRef.current = false
       }
-    )
+    })
 
     unlistenRefs.current = [outputUnlisten, errorUnlisten, completeUnlisten]
 
@@ -555,7 +552,12 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
 
                 // Update the backend with the session ID
                 if (currentRunId) {
-                  console.log('[ClaudeCodeSession] Updating backend with sessionId:', msg.session_id, 'for runId:', currentRunId)
+                  console.log(
+                    '[ClaudeCodeSession] Updating backend with sessionId:',
+                    msg.session_id,
+                    'for runId:',
+                    currentRunId
+                  )
                   try {
                     await api.updateSessionId(currentRunId, msg.session_id)
                   } catch (err) {

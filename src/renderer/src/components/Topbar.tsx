@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Circle, FileText, Settings, ExternalLink, BarChart3, Network, Info } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { ThemeToggle } from './ThemeToggle'
 import { api, type ClaudeVersionStatus } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { ClaudeIcon } from './ClaudeIcon'
@@ -189,6 +190,8 @@ export const Topbar: React.FC<TopbarProps> = ({
           <Settings className="mr-2 h-3 w-3" />
           {t('topbar.buttons.settings')}
         </Button>
+
+        <ThemeToggle />
 
         <Button
           variant="ghost"
